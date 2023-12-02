@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "this is echo shell script"
+echo "this is echo shellscript"
