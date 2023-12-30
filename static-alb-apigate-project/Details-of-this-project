@@ -1,0 +1,14 @@
+This is my 1st complete full project ,
+which includes aws region, a vpc, 2 private subnets, 2 public subnets, 1 nat, 1 IGW,
+ 1 loadbalancer, 1 docker conatiner which will host on ec2 for backend, aws s3 for frontend, 1 aws apigateway 
+ lambda for onthoer backed setup
+
+
+ front end will call  3 api's 
+ 1) 1st api will call a alb with path photo, which will responde back with photo
+ 2) 2nd api will call a alb with path details, which will call details of mine
+ 3) 3rd api will apigateway serice, which will trigger aws lambda, it will responde back with details of aws region
+
+ Front end: s3, cloudfront
+ backend1: alb docker
+ Backend2: Apigateway and lambda
