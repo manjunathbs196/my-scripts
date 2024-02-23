@@ -1,0 +1,146 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This templates creates a ec2, volume, SG",
+    "Parameters": {
+        "InstanceAvailabilityZone": {
+            "Description": "Please select or choose availability zone",
+            "Type": "AWS::EC2::AvailabilityZone::Name",
+            "Default": "ap-south-1a"
+        },
+        "InstanceInstanceType": {
+            "Description": "Select Instance Type",
+            "Type": "String",
+            "AllowedValues": [
+                "t2.nano",
+                "t2.micro",
+                "t2.small",
+                "t2.medium"
+            ],
+            "Default": "t2.micro"
+        },
+        "InstanceKeyPair": {
+            "Description": "Please select or choose KeyPair",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "Default": "manju"
+        },
+        "InstanceMonitoring": {
+            "Description": "Specifies whether detailed monitoring is enabled for the instance. Specify true to enable detailed monitoring. Otherwise, basic monitoring is enabled",
+            "Type": "String",
+            "AllowedValues": [
+                true,
+                false
+            ],
+            "Default": false
+        },
+        "InstanceSecurityGroups": {
+            "Description": "specify the security groups",
+            "Type": "AWS::EC2::SecurityGroup::GroupName",
+            "Default":"default"
+        },
+        "InstanceIamInstanceProfile": {
+            "Description": "Role for ec2 instance",
+            "Type": "String",
+            "Default":"ec2-role"
+        },
+        "AppTagValue": {
+            "Description": "Value of the App tag tag",
+            "Type": "String",
+            "Default": "Nginx"
+        },
+        "TagValue": {
+            "Description": "Value of the tag",
+            "Type": "String",
+            "Default": "Manju"
+        },
+        "EnvTagValue": {
+            "Description": "Value of the Env tag",
+            "AllowedValues": [
+                "Dev",
+                "Prod"
+            ],
+            "Type": "String",
+            "Default": "Dev"
+        },
+        "OwnerTagValue": {
+            "Description": "Value of the Owner tag",
+            "Type": "String",
+            "Default": "Created by Manju"
+        },
+        "InstanceImageId": {
+            "Description": "The ID of the AMI",
+            "Type": "AWS::EC2::Image::Id",
+            "Default":"ami-0a0f1259dd1c90938"
+        }
+    },
+    "Resources": {
+        "Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "AvailabilityZone": {
+                    "Ref": "InstanceAvailabilityZone"
+                },
+                "IamInstanceProfile": {
+                    "Ref": "InstanceIamInstanceProfile"
+                },
+                "ImageId": {
+                    "Ref": "InstanceImageId"
+                },
+                "InstanceType": {
+                    "Ref": "InstanceInstanceType"
+                },
+                "KeyName": {
+                    "Ref": "InstanceKeyPair"
+                },
+                "Monitoring": {
+                    "Ref": "InstanceMonitoring"
+                },
+                "SecurityGroups": [
+                    {
+                    "Ref": "InstanceSecurityGroups"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "TagValue"
+                        }
+                    },
+                    {
+                        "Key": "AppName",
+                        "Value": {
+                            "Ref": "AppTagValue"
+                        }
+                    },
+                    {
+                        "Key": "EnvName",
+                        "Value": {
+                            "Ref": "EnvTagValue"
+                        }
+                    },
+                    {
+                        "Key": "OwnerTagValue",
+                        "Value": {
+                            "Ref": "OwnerTagValue"
+                        }
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -e\n",
+                                "yum install vim -y\n",
+                                "apt-get update -y\n",
+                                "echo 'this is userdata' >>/home/ec2-user/output.txt\n",
+                                "\n"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Outputs": {}
+}

@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Photo</title>
+    <title>Image Page</title>
 </head>
 <body>
-    <h1>Here's My Photo</h1>
-    <img src="image.jpg" alt="Your Photo">
+    <h2>Image Page</h2>
+    <img id="image" alt="Image from API">
+    <script>
+        // Use JavaScript to fetch the image from S3
+        fetch('https://manjuweb-bucket.s3.ap-south-1.amazonaws.com/s3.jpg')
+            .then(response => response.blob())
+            .then(blob => {
+                const imageElement = document.getElementById('image');
+                imageElement.src = URL.createObjectURL(blob);
+            })
+            .catch(error => console.error('Error fetching image:', error));
+    </script>
 </body>
 </html>
